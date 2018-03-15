@@ -11,9 +11,9 @@ from plotly.graph_objs import *
 import dash_auth
 
 
-VALID_USERNAME_PASSWORD_PAIRS = [
-    [os.environ['USER'], os.environ['PASS']]
-]
+
+with open('.pass') as f:
+    VALID_USERNAME_PASSWORD_PAIRS = [x.strip().split(':') for x in f.readlines()]
 
 files_videos = {
     'Week1': 'data/week1.csv',
