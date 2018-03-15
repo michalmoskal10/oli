@@ -1,9 +1,9 @@
 import dash
+import os
 
 from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
-from pandas_datareader import data as web
 import dash_table_experiments as dt
 import pandas as pd
 import plotly.graph_objs as go
@@ -12,7 +12,7 @@ import dash_auth
 
 
 VALID_USERNAME_PASSWORD_PAIRS = [
-    ['hello', 'world']
+    [os.environ['USER'], os.environ['PASS']]
 ]
 
 files_videos = {
@@ -37,6 +37,14 @@ files_assignments_table = {
     'Week3': 'data/week3_assignments_table.csv',
     'Week4': 'data/week4_assignments_table.csv',
     'all': 'data/assignments_table.csv'
+}
+
+active_users = {
+    'Week1':1338,
+    'Week2':648,
+    'Week3':351,
+    'Week4':303,
+    'all': 1646
 }
 
 DF_GAPMINDER = pd.read_csv(
@@ -142,7 +150,7 @@ app.layout = html.Div([
             'marginLeft': 60,
             'marginRight': 60,
             'marginBottom': 90,
-            'marginTop': 95
+            'marginTop': 100
         },
     ),
 
@@ -173,7 +181,7 @@ app.layout = html.Div([
             'marginLeft': 60,
             'marginRight': 60,
             'marginBottom': 50,
-            'marginTop': 145
+            'marginTop': 0
         }
     ),
     html.Div(
@@ -212,8 +220,12 @@ def update_graph(selected_dropdown_value):
     df = pd.read_csv(files_videos[selected_dropdown_value])
 
     l = df['last_seen'].tolist()
-    s = 1337
+    s = 1646
 
+    if len(l) < 10:
+        range = len(l) - 0.5
+    else:
+        range = 9.5
     return {
         # 'data': [{
         #     'x': df.index,
@@ -226,18 +238,15 @@ def update_graph(selected_dropdown_value):
         )],
         'layout':{
             #'autosize':True,
-            'height':800,
-            'width':800,
+            'height':900,
+            'width':900,
             'yaxis': {
                 'tickformat': '%'
             },
             'xaxis': {
-                'tickangle': 90,
-                'tickfont':dict(
-                    #family='Old Standard TT, serif',
-                    size=11,
-                    color='black'
-                )
+                'tickangle': 45,
+                'range': [-0.5, range],
+
             },
             'annotations': Annotations([
                 Annotation(
@@ -259,12 +268,13 @@ def update_graph(selected_dropdown_value):
     #    selected_dropdown_value, data_source='google',
     #    start=dt(2017, 1, 1), end=dt.now())
     df = pd.read_csv(files_videos[selected_dropdown_value])
-    if(selected_dropdown_value == 'all'):
-        s1 = 1645
-    else:
-        s1=1337
+    s1 = active_users[selected_dropdown_value]
 
     l1 = df['watched'].tolist()
+    if len(l1) < 10:
+        range = len(l1) - 0.5
+    else:
+        range = 9.5
     return {
         # 'data': [{
         #     'x': df.index,
@@ -276,19 +286,16 @@ def update_graph(selected_dropdown_value):
             y=[x/s1 for x in l1]
         )],
         'layout':{
-            'height': 800,
-            'width': 800,
+            'height': 900,
+            'width': 900,
             'yaxis': {
 
                 'tickformat': '%'
             },
             'xaxis': {
-                'tickangle': 90,
-                'tickfont': dict(
-                    # family='Old Standard TT, serif',
-                    size=11,
-                    color='black'
-                )
+                'tickangle': 45,
+                'range': [-0.5, range],
+
             },
             'annotations': Annotations([
                 Annotation(
