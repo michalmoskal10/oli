@@ -136,8 +136,8 @@ app.layout = html.Div([
         style={'marginBottom': 50, 'marginLeft': 100, 'marginRight': 100}
     ),
     html.H6('Total number of students enrolled for this time period: 1242.', style={'margin-left': '70'}),
-    html.H6('Total number of active students in this time period: 1645.', style={'margin-left': '70'}),
-    html.H6('Number of students enrolled in previous sessions but active in current session: 1134.', style={'margin-left': '70'}),
+    html.H6('Total number of active students in this time period: 1646.', style={'margin-left': '70'}),
+    html.H6('Number of students enrolled in previous sessions but active in current session: 1135.', style={'margin-left': '70'}),
     html.Div(
         children=[
             html.H3('% of ever-active users for whom video was the last video seen before dropping out of or completing the course.',
@@ -159,8 +159,8 @@ app.layout = html.Div([
             html.H2('% of students active in week who watched a video',
                     style={'text-align': 'center'}),
             dcc.Graph(id='watched'),
-            html.H5('Total number of students active in week: 1337',
-                    style={'text-align': 'left'})
+
+            html.Div(id='active_in_week')
         ],
         style={
             'marginLeft':60,
@@ -258,7 +258,7 @@ def update_graph(selected_dropdown_value):
                     yref='paper'
                 )
             ]),
-            'margin': Margin(b=300)
+            'margin': Margin(b=350)
         }
     }
 
@@ -307,7 +307,7 @@ def update_graph(selected_dropdown_value):
                     yref='paper'
                 )
             ]),
-            'margin': Margin(b=300)
+            'margin': Margin(b=350)
         }
     }
 
@@ -356,6 +356,12 @@ def update_graph(selected_dropdown_value):
     df5 = pd.read_csv(files_assignments_table[selected_dropdown_value])
 
     return df5.to_dict('records')
+
+
+@app.callback(Output('active_in_week', 'children'), [Input('module', 'value')])
+def update_header(selected_dropdown_value):
+    return [html.H4('Total number of students active in week: ' +  str(active_users[selected_dropdown_value]),
+                    style={'text-align': 'left'})]
 
 
 app.css.append_css({
