@@ -8,9 +8,10 @@ import dash_table_experiments as dt
 import pandas as pd
 import plotly.graph_objs as go
 from plotly.graph_objs import *
-import dash_auth
 
 
+
+from server import server
 
 with open('.pass') as f:
     VALID_USERNAME_PASSWORD_PAIRS = [x.strip().split(':') for x in f.readlines()]
@@ -59,12 +60,14 @@ df = pd.read_csv(
     'c353e8ef842413cae56ae3920b8fd78468aa4cb2/'
     'usa-agricultural-exports-2011.csv')
 
-app = dash.Dash('auth')
-server = app.server
-auth = dash_auth.BasicAuth(
-    app,
-    VALID_USERNAME_PASSWORD_PAIRS
-)
+
+app = dash.Dash(name='story2', sharing=True,
+                server=server, url_base_pathname='/story2', csrf_protect=False)
+
+# auth = dash_auth.BasicAuth(
+#     app,
+#     VALID_USERNAME_PASSWORD_PAIRS
+# )
 
 app.layout = html.Div([
     html.H4('Robotics: Aerial Robotics'),
@@ -369,5 +372,5 @@ app.css.append_css({
     # 'url': '~/Desktop/bWLwgP.css'
 })
 
-if __name__ == '__main__':
-    app.run_server(debug=True)
+# if __name__ == '__main__':
+#     app.run_server(debug=True)
