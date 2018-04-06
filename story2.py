@@ -234,16 +234,7 @@ def update_graph(selected_dropdown_value):
                 'range': [-0.5, range],
 
             },
-            'annotations': Annotations([
-                Annotation(
-                    x=0.5004254919715793,
-                    y=1.13191064079952971,
-                    showarrow=False,
-                    text='Left to right is order in the course',
-                    xref='paper',
-                    yref='paper'
-                )
-            ]),
+
             'margin': Margin(b=350)
         }
     }
@@ -285,16 +276,7 @@ def update_graph(selected_dropdown_value):
                 'range': [-0.5, range],
 
             },
-            'annotations': Annotations([
-                Annotation(
-                    x=0.5004254919715793,
-                    y=1.13191064079952971,
-                    showarrow=False,
-                    text='Left to right is order in the course',
-                    xref='paper',
-                    yref='paper'
-                )
-            ]),
+
             'margin': Margin(b=350)
         }
     }
