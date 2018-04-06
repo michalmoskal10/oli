@@ -16,49 +16,43 @@ from server import server
 with open('.pass') as f:
     VALID_USERNAME_PASSWORD_PAIRS = [x.strip().split(':') for x in f.readlines()]
 
-files_videos = {
-    'Week1': 'data/week1.csv',
-    'Week2': 'data/week2.csv',
-    'Week3': 'data/week3.csv',
-    'Week4': 'data/week4.csv',
-    'all': 'data/all.csv'
+first_attempts = {
+    'Quiz 1.1': 'data/story2/assignment_1_1/first_attempt.csv',
+    'Quiz 1.2': 'data/story2/assignment_1_2/first_attempt.csv',
+    'Quiz 2.1': 'data/story2/assignment_2_1/first_attempt.csv',
+    'Quiz 3': 'data/story2/week4.csv',
+    'Quiz 4': 'data/story2/week4.csv',
+    'all': 'data/story2/all.csv'
 }
 
-files_assignments = {
-    'Week1': 'data/week1_assignments.csv',
-    'Week2': 'data/week2_assignments.csv',
-    'Week3': 'data/week3_assignments.csv',
-    'Week4': 'data/week4_assignments.csv',
-    'all': 'data/all_ass.csv'
+second_attempts = {
+    'Quiz 1.1': 'data/story2/assignment_1_1/second_attempt.csv',
+    'Quiz 1.2': 'data/story2/assignment_1_2/second_attempt.csv',
+    'Quiz 2.1': 'data/story2/assignment_2_1/second_attempt.csv',
+    'Quiz 3': 'data/story2/week4.csv',
+    'Quiz 4': 'data/story2/week4.csv',
+    'all': 'data/story2/all.csv'
 }
 
-files_assignments_table = {
-    'Week1': 'data/week1_assignments_table.csv',
-    'Week2': 'data/week2_assignments_table.csv',
-    'Week3': 'data/week3_assignments_table.csv',
-    'Week4': 'data/week4_assignments_table.csv',
-    'all': 'data/assignments_table.csv'
+attempts_to_correct = {
+    'Quiz 1.1': 'data/story2/assignment_1_1/attempts_to_correct.csv',
+    'Quiz 1.2': 'data/story2/assignment_1_2/attempts_to_correct.csv',
+    'Quiz 2.1': 'data/story2/assignment_2_1/attempts_to_correct.csv',
+    'Quiz 3': 'data/story2/week4.csv',
+    'Quiz 4': 'data/story2/week4.csv',
+    'all': 'data/story2/all.csv'
 }
 
-active_users = {
-    'Week1':1338,
-    'Week2':648,
-    'Week3':351,
-    'Week4':303,
-    'all': 1646
+never_correct = {
+    'Quiz 1.1': 'data/story2/assignment_1_1/never_correct.csv',
+    'Quiz 1.2': 'data/story2/assignment_1_2/never_correct.csv',
+    'Quiz 2.1': 'data/story2/assignment_2_1/never_correct.csv',
+    'Quiz 3': 'data/story2/week4.csv',
+    'Quiz 4': 'data/story2/week4.csv',
+    'all': 'data/story2/all.csv'
 }
 
-DF_GAPMINDER = pd.read_csv(
-    'data/assignments_table.csv'
-    #'https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv'
-)
-#DF_GAPMINDER = DF_GAPMINDER[DF_GAPMINDER['year'] == 2007]
 
-df = pd.read_csv(
-    'https://gist.githubusercontent.com/chriddyp/'
-    'c78bf172206ce24f77d6363a2d754b59/raw/'
-    'c353e8ef842413cae56ae3920b8fd78468aa4cb2/'
-    'usa-agricultural-exports-2011.csv')
 
 
 app = dash.Dash(name='story2', sharing=True,
@@ -123,30 +117,29 @@ app.layout = html.Div([
     ),
 
     html.Div(children=[
-        html.Label('Module'),
+        html.Label('Assignment'),
         dcc.Dropdown(
-            id='module',
+            id='assignment',
             options=[
-                {'label': '1. Introduction to Aerial Robotics', 'value': 'Week1'},
-                {'label': '2. Geometry and Mechanics', 'value': 'Week2'},
-                {'label': '3. Planning and Control', 'value': 'Week3'},
-                {'label': '4. Advanced Topics', 'value': 'Week4'},
-                {'label': 'All modules', 'value': 'all'},
+                {'label': 'Quiz 1.1', 'value': 'Quiz 1.1'},
+                {'label': 'Quiz 1.2', 'value': 'Quiz 1.2'},
+                {'label': 'Quiz 2.1', 'value': 'Quiz 2.1'},
+                {'label': 'Quiz 3', 'value': 'Week4'},
+                {'label': 'Quiz 4', 'value': 'all'},
+                {'label': 'All', 'value': 'all'},
 
             ],
-            value='Week1'
+            value='Quiz 1.1'
         ), ],
         style={'marginBottom': 50, 'marginLeft': 100, 'marginRight': 100}
     ),
-    html.H6('Total number of students enrolled for this time period: 1242.', style={'margin-left': '70'}),
-    html.H6('Total number of active students in this time period: 1646.', style={'margin-left': '70'}),
-    html.H6('Number of students enrolled in previous sessions but active in current session: 1135.', style={'margin-left': '70'}),
-    html.Div(
+
+      html.Div(
         children=[
-            html.H3('% of ever-active users for whom video was the last video seen before dropping out of or completing the course.',
+            html.H2('First attempt error rate.',
                     style={'text-align':'center',
                            'padding-bottom':'-1em'}),
-            dcc.Graph(id='video_last_seen'),
+            dcc.Graph(id='first_attempt'),
 
         ],
         style={
@@ -156,29 +149,26 @@ app.layout = html.Div([
             'marginTop': 100
         },
     ),
-
     html.Div(
         children=[
-            html.H2('% of students active in week who watched a video',
-                    style={'text-align': 'center'}),
-            dcc.Graph(id='watched'),
-
-            html.Div(id='active_in_week')
+            html.H2('Second attempt error rate',
+                    style={'text-align':'center',
+                           'padding-bottom':'-1em'}),
+            dcc.Graph(id='second_attempt'),
         ],
         style={
-            'marginLeft':60,
-            'marginRight':60,
+            'marginLeft': 60,
+            'marginRight': 60,
             'marginBottom': 90,
             'marginTop': 0
         }
     ),
-
     html.Div(
         children=[
-            html.H3('% of time each assignment was last seen before dropping out of or completing the course.',
-                    style={'text-align': 'center'}),
-            dcc.Graph(id='assignment_last_seen'),
-
+            html.H2('Attempts to correct (avarage).',
+                    style={'text-align': 'center',
+                           'padding-bottom': '-1em'}),
+            dcc.Graph(id='attempts_to_correct'),
         ],
         style={
             'marginLeft': 60,
@@ -187,19 +177,13 @@ app.layout = html.Div([
             'marginTop': 0
         }
     ),
+
     html.Div(
         children=[
-            dt.DataTable(
-                rows=[{}],
-                # optional - sets the order of columns
-                columns = ['Course order', 'Assignment', 'Last seen (%)'],
-                # columns=sorted(DF_GAPMINDER.columns),
-
-                # filterable=True,
-                sortable = True,
-                selected_row_indices = [],
-                id='assignments_table',
-            )
+            html.H2('Percent who attempt, but never correct.',
+                    style={'text-align': 'center',
+                           'padding-bottom': '-1em'}),
+            dcc.Graph(id='never_correct'),
         ],
         style={
             'marginLeft': 60,
@@ -207,26 +191,25 @@ app.layout = html.Div([
             'marginBottom': 50,
             'marginTop': 0
         }
-    )
-
-
+    ),
 
 ],
     className="container"
 )
 
-@app.callback(Output('video_last_seen', 'figure'), [Input('module', 'value')])
+@app.callback(Output('first_attempt', 'figure'), [Input('assignment', 'value')])
 def update_graph(selected_dropdown_value):
     #df = web.DataReader(
     #    selected_dropdown_value, data_source='google',
     #    start=dt(2017, 1, 1), end=dt.now())
-    df = pd.read_csv(files_videos[selected_dropdown_value])
+    df = pd.read_csv(first_attempts[selected_dropdown_value])
 
-    l = df['last_seen'].tolist()
-    s = 1646
+    df['error'] = (df['all'] - df['correct']) / df['all']
+    df.sort_values(by=['error'], ascending=False, inplace=True)
 
-    if len(l) < 10:
-        range = len(l) - 0.5
+    l = len(df.index)
+    if l < 10:
+        range = l - 0.5
     else:
         range = 9.5
     return {
@@ -236,8 +219,8 @@ def update_graph(selected_dropdown_value):
         #     'type': 'bar'
         # }]
         'data': [go.Bar(
-            x=df['video'].tolist(),
-            y=[x/s for x in l]
+            x=df['name'].tolist(),
+            y=df['error'].tolist()
         )],
         'layout':{
             #'autosize':True,
@@ -265,17 +248,19 @@ def update_graph(selected_dropdown_value):
         }
     }
 
-@app.callback(Output('watched', 'figure'), [Input('module', 'value')])
+@app.callback(Output('second_attempt', 'figure'), [Input('assignment', 'value')])
 def update_graph(selected_dropdown_value):
     #df = web.DataReader(
     #    selected_dropdown_value, data_source='google',
     #    start=dt(2017, 1, 1), end=dt.now())
-    df = pd.read_csv(files_videos[selected_dropdown_value])
-    s1 = active_users[selected_dropdown_value]
+    df = pd.read_csv(second_attempts[selected_dropdown_value])
 
-    l1 = df['watched'].tolist()
-    if len(l1) < 10:
-        range = len(l1) - 0.5
+    df['error'] = (df['all'] - df['correct']) / df['all']
+    df.sort_values(by=['error'], ascending=False, inplace=True)
+
+    l = len(df.index)
+    if l < 10:
+        range = l - 0.5
     else:
         range = 9.5
     return {
@@ -285,8 +270,8 @@ def update_graph(selected_dropdown_value):
         #     'type': 'bar'
         # }]
         'data': [go.Bar(
-            x=df['video'].tolist(),
-            y=[x/s1 for x in l1]
+            x=df['name'].tolist(),
+            y=df['error'].tolist()
         )],
         'layout':{
             'height': 900,
@@ -314,58 +299,86 @@ def update_graph(selected_dropdown_value):
         }
     }
 
-@app.callback(Output('assignment_last_seen', 'figure'), [Input('module', 'value')])
+
+@app.callback(Output('attempts_to_correct', 'figure'), [Input('assignment', 'value')])
 def update_graph(selected_dropdown_value):
     #df = web.DataReader(
     #    selected_dropdown_value, data_source='google',
     #    start=dt(2017, 1, 1), end=dt.now())
-    df3 = pd.read_csv(files_assignments[selected_dropdown_value])
+    df = pd.read_csv(attempts_to_correct[selected_dropdown_value])
 
-
-    l3 = df3['last_seen'].tolist()
-    s3 = 896
-
-
+    df.sort_values(by='avg', ascending=False, inplace=True)
+    l = len(df.index)
+    if l < 10:
+        range = l - 0.5
+    else:
+        range = 9.5
     return {
         # 'data': [{
         #     'x': df.index,
         #     'y': df.values,
         #     'type': 'bar'
         # }]
-        'data':[go.Bar(
-            x=df3['name'].tolist(),
-            y=[x / s3 for x in l3]
+        'data': [go.Bar(
+            x=df['name'].tolist(),
+            y=df['avg'].tolist()
         )],
-        'layout': {
-            'yaxis': {
-                'tickformat': '%'
+        'layout':{
+            'height': 900,
+            'width': 900,
+
+            'xaxis': {
+                'tickangle': 45,
+                'range': [-0.5, range],
+
             },
-            'annotations': Annotations([
-                Annotation(
-                    x=0.5004254919715793,
-                    y=1.13191064079952971,
-                    showarrow=False,
-                    text='Left to right is order in the course',
-                    xref='paper',
-                    yref='paper'
-                )
-            ])
+
+            'margin': Margin(b=350)
         }
     }
 
 
-@app.callback(Output('assignments_table', 'rows'), [Input('module', 'value')])
+@app.callback(Output('never_correct', 'figure'), [Input('assignment', 'value')])
 def update_graph(selected_dropdown_value):
-    df5 = pd.read_csv(files_assignments_table[selected_dropdown_value])
+    #df = web.DataReader(
+    #    selected_dropdown_value, data_source='google',
+    #    start=dt(2017, 1, 1), end=dt.now())
+    df = pd.read_csv(never_correct[selected_dropdown_value])
 
-    return df5.to_dict('records')
+    df['never_correct_percent'] = df['never_correct'] / df['all']
+    df.sort_values(by='never_correct_percent', ascending=False, inplace=True)
+    l = len(df.index)
 
+    if l < 10:
+        range = l - 0.5
+    else:
+        range = 9.5
+    return {
+        # 'data': [{
+        #     'x': df.index,
+        #     'y': df.values,
+        #     'type': 'bar'
+        # }]
+        'data': [go.Bar(
+            x=df['name'].tolist(),
+            y=df['never_correct_percent'].tolist()
+        )],
+        'layout':{
+            'height': 900,
+            'width': 900,
+            'yaxis': {
 
-@app.callback(Output('active_in_week', 'children'), [Input('module', 'value')])
-def update_header(selected_dropdown_value):
-    return [html.H4('Total number of students active in week: ' +  str(active_users[selected_dropdown_value]),
-                    style={'text-align': 'left'})]
+                'tickformat': '%'
+            },
+            'xaxis': {
+                'tickangle': 45,
+                'range': [-0.5, range],
 
+            },
+
+            'margin': Margin(b=350)
+        }
+    }
 
 app.css.append_css({
     'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'
