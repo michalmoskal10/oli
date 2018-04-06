@@ -20,8 +20,8 @@ first_attempts = {
     'Quiz 1.1': 'data/story2/assignment_1_1/first_attempt.csv',
     'Quiz 1.2': 'data/story2/assignment_1_2/first_attempt.csv',
     'Quiz 2.1': 'data/story2/assignment_2_1/first_attempt.csv',
-    'Quiz 3': 'data/story2/week4.csv',
-    'Quiz 4': 'data/story2/week4.csv',
+    'Quiz 3': 'data/story2/assignment_3/first_attempt.csv',
+    'Quiz 4': 'data/story2/assignment_4/first_attempt.csv',
     'all': 'data/story2/all.csv'
 }
 
@@ -29,8 +29,8 @@ second_attempts = {
     'Quiz 1.1': 'data/story2/assignment_1_1/second_attempt.csv',
     'Quiz 1.2': 'data/story2/assignment_1_2/second_attempt.csv',
     'Quiz 2.1': 'data/story2/assignment_2_1/second_attempt.csv',
-    'Quiz 3': 'data/story2/week4.csv',
-    'Quiz 4': 'data/story2/week4.csv',
+    'Quiz 3': 'data/story2/assignment_3/second_attempt.csv',
+    'Quiz 4': 'data/story2/assignment_4/second_attempt.csv',
     'all': 'data/story2/all.csv'
 }
 
@@ -38,8 +38,8 @@ attempts_to_correct = {
     'Quiz 1.1': 'data/story2/assignment_1_1/attempts_to_correct.csv',
     'Quiz 1.2': 'data/story2/assignment_1_2/attempts_to_correct.csv',
     'Quiz 2.1': 'data/story2/assignment_2_1/attempts_to_correct.csv',
-    'Quiz 3': 'data/story2/week4.csv',
-    'Quiz 4': 'data/story2/week4.csv',
+    'Quiz 3': 'data/story2/assignment_3/attempts_to_correct.csv',
+    'Quiz 4': 'data/story2/assignment_4/attempts_to_correct.csv',
     'all': 'data/story2/all.csv'
 }
 
@@ -47,8 +47,8 @@ never_correct = {
     'Quiz 1.1': 'data/story2/assignment_1_1/never_correct.csv',
     'Quiz 1.2': 'data/story2/assignment_1_2/never_correct.csv',
     'Quiz 2.1': 'data/story2/assignment_2_1/never_correct.csv',
-    'Quiz 3': 'data/story2/week4.csv',
-    'Quiz 4': 'data/story2/week4.csv',
+    'Quiz 3': 'data/story2/assignment_3/never_correct.csv',
+    'Quiz 4': 'data/story2/assignment_4/never_correct.csv',
     'all': 'data/story2/all.csv'
 }
 
@@ -124,8 +124,8 @@ app.layout = html.Div([
                 {'label': 'Quiz 1.1', 'value': 'Quiz 1.1'},
                 {'label': 'Quiz 1.2', 'value': 'Quiz 1.2'},
                 {'label': 'Quiz 2.1', 'value': 'Quiz 2.1'},
-                {'label': 'Quiz 3', 'value': 'Week4'},
-                {'label': 'Quiz 4', 'value': 'all'},
+                {'label': 'Quiz 3', 'value': 'Quiz 3'},
+                {'label': 'Quiz 4', 'value': 'Quiz 4'},
                 {'label': 'All', 'value': 'all'},
 
             ],
