@@ -13,27 +13,27 @@ from plotly.graph_objs import *
 from server import server
 
 files_videos = {
-    'Week1': 'data/week1.csv',
-    'Week2': 'data/week2.csv',
-    'Week3': 'data/week3.csv',
-    'Week4': 'data/week4.csv',
-    'all': 'data/all.csv'
+    'Week1': 'data/story1/week1.csv',
+    'Week2': 'data/story1/week2.csv',
+    'Week3': 'data/story1/week3.csv',
+    'Week4': 'data/story1/week4.csv',
+    'all': 'data/story1/all.csv'
 }
 
 files_assignments = {
-    'Week1': 'data/week1_assignments.csv',
-    'Week2': 'data/week2_assignments.csv',
-    'Week3': 'data/week3_assignments.csv',
-    'Week4': 'data/week4_assignments.csv',
-    'all': 'data/all_ass.csv'
+    'Week1': 'data/story1/week1_assignments.csv',
+    'Week2': 'data/story1/week2_assignments.csv',
+    'Week3': 'data/story1/week3_assignments.csv',
+    'Week4': 'data/story1/week4_assignments.csv',
+    'all': 'data/story1/all_ass.csv'
 }
 
 files_assignments_table = {
-    'Week1': 'data/week1_assignments_table.csv',
-    'Week2': 'data/week2_assignments_table.csv',
-    'Week3': 'data/week3_assignments_table.csv',
-    'Week4': 'data/week4_assignments_table.csv',
-    'all': 'data/assignments_table.csv'
+    'Week1': 'data/story1/week1_assignments_table.csv',
+    'Week2': 'data/story1/week2_assignments_table.csv',
+    'Week3': 'data/story1/week3_assignments_table.csv',
+    'Week4': 'data/story1/week4_assignments_table.csv',
+    'all': 'data/story1/assignments_table.csv'
 }
 
 active_users = {
@@ -45,7 +45,7 @@ active_users = {
 }
 
 DF_GAPMINDER = pd.read_csv(
-    'data/assignments_table.csv'
+    'data/story1/assignments_table.csv'
     #'https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv'
 )
 #DF_GAPMINDER = DF_GAPMINDER[DF_GAPMINDER['year'] == 2007]
