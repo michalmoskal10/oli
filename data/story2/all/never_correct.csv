@@ -1,6 +1,29 @@
-name,never_correct,all
-Quiz 4 – item 1,2,81
-Quiz 4 – item 2,9,81
-Quiz 4 – item 4,20,81
-Quiz 4 – item 5,11,81
-Quiz 4 – item 3,5,81
+name,never_correct
+Quiz 4 – item 1,0.024691358024691
+Quiz 4 – item 2,0.111111111111111
+Quiz 4 – item 4,0.246913580246914
+Quiz 4 – item 5,0.135802469135802
+Quiz 4 – item 3,0.061728395061728
+Quiz 1.1 – item 5,0.495677233429395
+Quiz 1.1 – item 6,0.250720461095101
+Quiz 1.1 – item 4,0.213256484149856
+Quiz 1.1 – item 1,0.0835734870317
+Quiz 1.1 – item 3,0.07492795389049
+Quiz 1.1 – item 2,0.060518731988473
+Quiz 1.2 – item 1,0.345291479820628
+Quiz 1.2 – item 2,0.2152466367713
+Quiz 1.2 – item 3,0.237668161434978
+Quiz 1.2 – item 4,0.008968609865471
+Quiz 1.2 – item 5.1,0.413223140495868
+Quiz 1.2 – item 5.2,0.323308270676692
+Quiz 1.2 – item 5.3,0.375
+Quiz 2.1 – item 4,0.211678832116788
+Quiz 2.1 – item 1,0.481751824817518
+Quiz 2.1 – item 3,0.131386861313869
+Quiz 2.1 – item 6,0.211678832116788
+Quiz 2.1 – item 5,0.255474452554745
+Quiz 2.1 – item 2,0.124087591240876
+Quiz 3 – item 1,0
+Quiz 3 – item 2,0.055555555555556
+Quiz 3 – item 3,0.088888888888889
+All assignments,0.194004829734638

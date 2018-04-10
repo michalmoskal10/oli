@@ -22,7 +22,7 @@ first_attempts = {
     'Quiz 2.1': 'data/story2/assignment_2_1/first_attempt.csv',
     'Quiz 3': 'data/story2/assignment_3/first_attempt.csv',
     'Quiz 4': 'data/story2/assignment_4/first_attempt.csv',
-    'all': 'data/story2/all.csv'
+    'all': 'data/story2/all/first_attempt.csv'
 }
 
 second_attempts = {
@@ -31,7 +31,7 @@ second_attempts = {
     'Quiz 2.1': 'data/story2/assignment_2_1/second_attempt.csv',
     'Quiz 3': 'data/story2/assignment_3/second_attempt.csv',
     'Quiz 4': 'data/story2/assignment_4/second_attempt.csv',
-    'all': 'data/story2/all.csv'
+    'all': 'data/story2/all/second_attempt.csv'
 }
 
 attempts_to_correct = {
@@ -40,7 +40,7 @@ attempts_to_correct = {
     'Quiz 2.1': 'data/story2/assignment_2_1/attempts_to_correct.csv',
     'Quiz 3': 'data/story2/assignment_3/attempts_to_correct.csv',
     'Quiz 4': 'data/story2/assignment_4/attempts_to_correct.csv',
-    'all': 'data/story2/all.csv'
+    'all': 'data/story2/all/attempts_to_correct.csv'
 }
 
 never_correct = {
@@ -49,7 +49,7 @@ never_correct = {
     'Quiz 2.1': 'data/story2/assignment_2_1/never_correct.csv',
     'Quiz 3': 'data/story2/assignment_3/never_correct.csv',
     'Quiz 4': 'data/story2/assignment_4/never_correct.csv',
-    'all': 'data/story2/all.csv'
+    'all': 'data/story2/all/never_correct.csv'
 }
 
 
@@ -204,14 +204,26 @@ def update_graph(selected_dropdown_value):
     #    start=dt(2017, 1, 1), end=dt.now())
     df = pd.read_csv(first_attempts[selected_dropdown_value])
 
-    df['error'] = (df['all'] - df['correct']) / df['all']
-    df.sort_values(by=['error'], ascending=False, inplace=True)
+    if selected_dropdown_value == 'all':
+
+        df = df.sort_values(by=['error_rate'], ascending=False)
+        i = df[df['name'] == 'All assignments'].index.tolist()[0]
+        df = pd.concat([df.ix[[i], :], df.drop(i, axis=0)], axis=0)
+
+        lx = df['name'].tolist()
+        ly = df['error_rate'].tolist()
+    else:
+        df['error'] = (df['all'] - df['correct']) / df['all']
+        df.sort_values(by=['error'], ascending=False, inplace=True)
+
+        lx = df['name'].tolist()
+        ly = df['error'].tolist()
 
     l = len(df.index)
     if l < 10:
         range = l - 0.5
     else:
-        range = 9.5
+        range = l
     return {
         # 'data': [{
         #     'x': df.index,
@@ -219,8 +231,8 @@ def update_graph(selected_dropdown_value):
         #     'type': 'bar'
         # }]
         'data': [go.Bar(
-            x=df['name'].tolist(),
-            y=df['error'].tolist()
+            x=lx,
+            y=ly
         )],
         'layout':{
             #'autosize':True,
@@ -246,14 +258,26 @@ def update_graph(selected_dropdown_value):
     #    start=dt(2017, 1, 1), end=dt.now())
     df = pd.read_csv(second_attempts[selected_dropdown_value])
 
-    df['error'] = (df['all'] - df['correct']) / df['all']
-    df.sort_values(by=['error'], ascending=False, inplace=True)
+    if selected_dropdown_value == 'all':
+
+        df = df.sort_values(by=['error_rate'], ascending=False)
+        i = df[df['name'] == 'All assignments'].index.tolist()[0]
+        df = pd.concat([df.ix[[i], :], df.drop(i, axis=0)], axis=0)
+
+        lx = df['name'].tolist()
+        ly = df['error_rate'].tolist()
+    else:
+        df['error'] = (df['all'] - df['correct']) / df['all']
+        df.sort_values(by=['error'], ascending=False, inplace=True)
+
+        lx = df['name'].tolist()
+        ly = df['error'].tolist()
 
     l = len(df.index)
     if l < 10:
         range = l - 0.5
     else:
-        range = 9.5
+        range = l
     return {
         # 'data': [{
         #     'x': df.index,
@@ -261,8 +285,8 @@ def update_graph(selected_dropdown_value):
         #     'type': 'bar'
         # }]
         'data': [go.Bar(
-            x=df['name'].tolist(),
-            y=df['error'].tolist()
+            x=lx,
+            y=ly
         )],
         'layout':{
             'height': 900,
@@ -289,12 +313,20 @@ def update_graph(selected_dropdown_value):
     #    start=dt(2017, 1, 1), end=dt.now())
     df = pd.read_csv(attempts_to_correct[selected_dropdown_value])
 
+
+
     df.sort_values(by='avg', ascending=False, inplace=True)
+
+    if selected_dropdown_value == 'all':
+
+        i = df[df['name'] == 'All assignments'].index.tolist()[0]
+        df = pd.concat([df.ix[[i], :], df.drop(i, axis=0)], axis=0)
+
     l = len(df.index)
     if l < 10:
         range = l - 0.5
     else:
-        range = 9.5
+        range = l
     return {
         # 'data': [{
         #     'x': df.index,
@@ -327,14 +359,27 @@ def update_graph(selected_dropdown_value):
     #    start=dt(2017, 1, 1), end=dt.now())
     df = pd.read_csv(never_correct[selected_dropdown_value])
 
-    df['never_correct_percent'] = df['never_correct'] / df['all']
-    df.sort_values(by='never_correct_percent', ascending=False, inplace=True)
+    if selected_dropdown_value == 'all':
+
+        df = df.sort_values(by=['never_correct'], ascending=False)
+        i = df[df['name'] == 'All assignments'].index.tolist()[0]
+        df = pd.concat([df.ix[[i], :], df.drop(i, axis=0)], axis=0)
+
+        lx = df['name'].tolist()
+        ly = df['never_correct'].tolist()
+    else:
+        df['never_correct_percent'] = df['never_correct'] / df['all']
+        df.sort_values(by='never_correct_percent', ascending=False, inplace=True)
+
+        lx = df['name'].tolist()
+        ly = df['never_correct_percent'].tolist()
+
     l = len(df.index)
 
     if l < 10:
         range = l - 0.5
     else:
-        range = 9.5
+        range = l
     return {
         # 'data': [{
         #     'x': df.index,
@@ -342,8 +387,8 @@ def update_graph(selected_dropdown_value):
         #     'type': 'bar'
         # }]
         'data': [go.Bar(
-            x=df['name'].tolist(),
-            y=df['never_correct_percent'].tolist()
+            x=lx,
+            y=ly
         )],
         'layout':{
             'height': 900,
