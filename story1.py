@@ -224,7 +224,7 @@ def update_graph(selected_dropdown_value):
     if len(l) < 10:
         range = len(l) - 0.5
     else:
-        range = 9.5
+        range = l
     return {
         # 'data': [{
         #     'x': df.index,
@@ -273,7 +273,7 @@ def update_graph(selected_dropdown_value):
     if len(l1) < 10:
         range = len(l1) - 0.5
     else:
-        range = 9.5
+        range = l1
     return {
         # 'data': [{
         #     'x': df.index,
@@ -359,9 +359,12 @@ def update_graph(selected_dropdown_value):
 
 @app.callback(Output('active_in_week', 'children'), [Input('module', 'value')])
 def update_header(selected_dropdown_value):
-    return [html.H4('Total number of students active in week: ' +  str(active_users[selected_dropdown_value]),
+    if selected_dropdown_value != 'all':
+        return [html.H4('Total number of students active in week: ' +  str(active_users[selected_dropdown_value]),
                     style={'text-align': 'left'})]
-
+    else:
+        return [html.H4('Total number of students active in time period: ' +  str(active_users[selected_dropdown_value]),
+                    style={'text-align': 'left'})]
 
 app.css.append_css({
     'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'
