@@ -10,7 +10,12 @@ import plotly.graph_objs as go
 from plotly.graph_objs import *
 
 
-from server import server
+from server import server, Course, Session, Module
+
+course = "Robotics: Aerial Robotics"
+course_id = Course.query.filter(Course.name==course).first().course_id
+sessions = Session.query.filter(Session.course_id==course_id).order_by(Session.start_date)
+modules = Module.query.filter(Module.course_id==course_id)
 
 files_videos = {
     'Week1': 'data/story1/week1.csv',
@@ -33,7 +38,7 @@ files_assignments_table = {
     'Week2': 'data/story1/week2_assignments_table.csv',
     'Week3': 'data/story1/week3_assignments_table.csv',
     'Week4': 'data/story1/week4_assignments_table.csv',
-    'all': 'data/story1/assignments_table.csv'
+    'all': 'data/story1/assignments_tables.csv'
 }
 
 active_users = {
@@ -44,76 +49,21 @@ active_users = {
     'all': 1646
 }
 
-DF_GAPMINDER = pd.read_csv(
-    'data/story1/assignments_table.csv'
-    #'https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv'
-)
-#DF_GAPMINDER = DF_GAPMINDER[DF_GAPMINDER['year'] == 2007]
 
-df = pd.read_csv(
-    'https://gist.githubusercontent.com/chriddyp/'
-    'c78bf172206ce24f77d6363a2d754b59/raw/'
-    'c353e8ef842413cae56ae3920b8fd78468aa4cb2/'
-    'usa-agricultural-exports-2011.csv')
 
 
 app = dash.Dash(name='story1', sharing=True,
                 server=server, url_base_pathname='/story1', csrf_protect=False)
 
-# auth2 = dash_auth.BasicAuth(
-#     app,
-#     VALID_USERNAME_PASSWORD_PAIRS
-# )
-
 app.layout = html.Div([
     html.H4('Robotics: Aerial Robotics'),
 
-
-    #html.Div(id='selected-indexes'),
 
     html.Div(children=[
             html.Label('Session'),
             dcc.Dropdown(
                 id='session',
-                options=[
-                    {'label': '2016-01-15 - 2016-02-22', 'value': 1},
-                    {'label': '2016-02-15 - 2016-03-21', 'value': 2},
-                    {'label': '2016-03-14 - 2016-04-18', 'value': 3},
-                    {'label': '2016-04-11 - 2016-05-16', 'value': 4},
-                    {'label': '2016-05-09 - 2016-06-13', 'value': 5},
-                    {'label': '2016-06-06 - 2016-07-11', 'value': 6},
-                    {'label': '2016-07-04 - 2016-08-08', 'value': 7},
-                    {'label': '2016-08-01 - 2016-09-05', 'value': 8},
-                    {'label': '2016-08-29 - 2016-10-03', 'value': 9},
-                    {'label': '2016-09-26 - 2016-10-31', 'value': 10},
-                    {'label': '2016-09-26 - 2016-10-31', 'value': 11},
-                    {'label': '2016-09-26 - 2016-10-31', 'value': 12},
-                    {'label': '2016-10-24 - 2016-11-28', 'value': 13},
-                    {'label': '2016-10-24 - 2016-11-28', 'value': 14},
-                    {'label': '2016-10-24 - 2016-11-28', 'value': 15},
-                    {'label': '2016-11-21 - 2016-12-26', 'value': 16},
-                    {'label': '2016-11-21 - 2016-12-26', 'value': 17},
-                    {'label': '2016-11-21 - 2016-12-26', 'value': 18},
-                    {'label': '2016-12-19 - 2017-01-23', 'value': 19},
-                    {'label': '2016-12-19 - 2017-01-23', 'value': 20},
-                    {'label': '2016-12-19 - 2017-01-23', 'value': 21},
-                    {'label': '2017-01-09 - 2017-04-24', 'value': 22},
-                    {'label': '2017-01-16 - 2017-02-20', 'value': 23},
-                    {'label': '2017-02-13 - 2017-03-20', 'value': 24},
-                    {'label': '2017-03-13 - 2017-04-17', 'value': 25},
-                    {'label': '2017-04-10 - 2017-05-15', 'value': 26},
-                    {'label': '2017-05-08 - 2017-06-12', 'value': 27},
-                    {'label': '2017-06-05 - 2017-07-10', 'value': 28},
-                    {'label': '2017-07-03 - 2017-08-07', 'value': 29},
-                    {'label': '2017-07-31 - 2017-09-04', 'value': 30},
-                    {'label': '2017-08-28 - 2017-10-02', 'value': 31},
-                    {'label': '2017-09-25 - 2017-10-30', 'value': 32},
-                    {'label': '2017-10-23 - 2017-11-27', 'value': 33},
-                    {'label': '2017-11-20 - 2017-12-25', 'value': 34},
-                    {'label': '2017-12-18 - 2018-01-22', 'value': 35},
-                    {'label': '2018-01-15 - 2018-02-19', 'value': 36},
-                ],
-                value=36,
+                options=[{'label': '{} - {}'.format(s.start_date, s.end_date), 'value': s.session_id} for s in sessions]
             ),],
         style={'marginBottom': 30, 'marginTop': 25, 'marginLeft': 100, 'marginRight':100}
     ),
@@ -122,15 +72,13 @@ app.layout = html.Div([
         html.Label('Module'),
         dcc.Dropdown(
             id='module',
-            options=[
-                {'label': '1. Introduction to Aerial Robotics', 'value': 'Week1'},
-                {'label': '2. Geometry and Mechanics', 'value': 'Week2'},
-                {'label': '3. Planning and Control', 'value': 'Week3'},
-                {'label': '4. Advanced Topics', 'value': 'Week4'},
+            options=
+            [
+                {'label': '{}. {}'.format(m.order + 1, m.name), 'value': m.module_id} for m in modules
+            ] +
+            [
                 {'label': 'All modules', 'value': 'all'},
-
-            ],
-            value='Week1'
+            ]
         ), ],
         style={'marginBottom': 50, 'marginLeft': 100, 'marginRight': 100}
     ),
@@ -194,7 +142,7 @@ app.layout = html.Div([
                 # filterable=True,
                 sortable = True,
                 selected_row_indices = [],
-                id='assignments_table',
+                id='assignments_tables',
             )
         ],
         style={
@@ -204,19 +152,13 @@ app.layout = html.Div([
             'marginTop': 0
         }
     )
-
-
-
 ],
     className="container"
 )
 
 @app.callback(Output('video_last_seen', 'figure'), [Input('module', 'value')])
-def update_graph(selected_dropdown_value):
-    #df = web.DataReader(
-    #    selected_dropdown_value, data_source='google',
-    #    start=dt(2017, 1, 1), end=dt.now())
-    df = pd.read_csv(files_videos[selected_dropdown_value])
+def update_graph(session, module):
+    df = pd.read_csv("data/{}/{}.csv".format(session, module))
 
     l = df['last_seen'].tolist()
     s = 1646
@@ -226,11 +168,6 @@ def update_graph(selected_dropdown_value):
     else:
         range = l
     return {
-        # 'data': [{
-        #     'x': df.index,
-        #     'y': df.values,
-        #     'type': 'bar'
-        # }]
         'data': [go.Bar(
             x=df['video'].tolist(),
             y=[x/s for x in l]
@@ -261,13 +198,10 @@ def update_graph(selected_dropdown_value):
         }
     }
 
-@app.callback(Output('watched', 'figure'), [Input('module', 'value')])
-def update_graph(selected_dropdown_value):
-    #df = web.DataReader(
-    #    selected_dropdown_value, data_source='google',
-    #    start=dt(2017, 1, 1), end=dt.now())
-    df = pd.read_csv(files_videos[selected_dropdown_value])
-    s1 = active_users[selected_dropdown_value]
+@app.callback(Output('watched', 'figure'), [Input('session', 'value'), Input('module', 'value')])
+def update_graph(session, module):
+    df = pd.read_csv("data/{}/{}.csv".format(session, module))
+    active = 21#Session.query.filter(Session.session_id==session).first().active_users#active_users[selected_dropdown_value]
 
     l1 = df['watched'].tolist()
     if len(l1) < 10:
@@ -275,14 +209,9 @@ def update_graph(selected_dropdown_value):
     else:
         range = l1
     return {
-        # 'data': [{
-        #     'x': df.index,
-        #     'y': df.values,
-        #     'type': 'bar'
-        # }]
         'data': [go.Bar(
             x=df['video'].tolist(),
-            y=[x/s1 for x in l1]
+            y=[x/active for x in l1]
         )],
         'layout':{
             'height': 900,
@@ -312,22 +241,13 @@ def update_graph(selected_dropdown_value):
 
 @app.callback(Output('assignment_last_seen', 'figure'), [Input('module', 'value')])
 def update_graph(selected_dropdown_value):
-    #df = web.DataReader(
-    #    selected_dropdown_value, data_source='google',
-    #    start=dt(2017, 1, 1), end=dt.now())
     df3 = pd.read_csv(files_assignments[selected_dropdown_value])
 
 
     l3 = df3['last_seen'].tolist()
     s3 = 896
 
-
     return {
-        # 'data': [{
-        #     'x': df.index,
-        #     'y': df.values,
-        #     'type': 'bar'
-        # }]
         'data':[go.Bar(
             x=df3['name'].tolist(),
             y=[x / s3 for x in l3]
@@ -350,7 +270,7 @@ def update_graph(selected_dropdown_value):
     }
 
 
-@app.callback(Output('assignments_table', 'rows'), [Input('module', 'value')])
+@app.callback(Output('assignments_tables', 'rows'), [Input('module', 'value')])
 def update_graph(selected_dropdown_value):
     df5 = pd.read_csv(files_assignments_table[selected_dropdown_value])
 
@@ -368,8 +288,4 @@ def update_header(selected_dropdown_value):
 
 app.css.append_css({
     'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'
-    # 'url': '~/Desktop/bWLwgP.css'
 })
-#
-# if __name__ == '__main__':
-#     app.run_server(debug=True)
