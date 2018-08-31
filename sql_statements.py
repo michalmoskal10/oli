@@ -94,30 +94,37 @@ active_users_enrolled = """WITH active_users AS (
 SELECT COUNT(*) FROM active_users;
 """
 
-active_users_time = """WITH active_users AS (
-  SELECT DISTINCT penn_user_id FROM on_demand_session_memberships 
-    JOIN course_progress p USING (penn_user_id)
-    JOIN course_branch_items i USING (course_item_id)
-    JOIN course_progress_state_types USING (course_progress_state_type_id)
-  WHERE i.course_branch_id = %s AND i.course_item_type_id=1
-    AND course_progress_state_type_desc = 'started' AND p.course_progress_ts > %s AND
-    p.course_progress_ts < %s
+active_users_time = """with u as (
+SELECT distinct penn_user_id
+FROM course_progress p
+JOIN course_progress_state_types
+  USING (course_progress_state_type_id)
+JOIN course_branch_items i using (course_item_id)
+JOIN course_branch_lessons l using (course_lesson_id, course_branch_id)
+JOIN course_branch_modules m using (course_module_id, course_branch_id)
+WHERE course_branch_id = %s
+  AND i.course_item_type_id=1
+  AND course_progress_state_type_desc = 'started'
+  AND p.course_progress_ts > %s and p.course_progress_ts < %s
 )
-SELECT COUNT(*) FROM active_users;
+select count(distinct penn_user_id) from u;
 """
 
-active_users_module = """WITH active_users AS (
-  SELECT DISTINCT penn_user_id FROM on_demand_session_memberships 
-    JOIN course_progress p USING (penn_user_id)
-    JOIN course_branch_items i USING (course_item_id)
-      JOIN course_branch_lessons l USING (course_lesson_id, course_branch_id)
-      JOIN course_branch_modules m USING (course_module_id, course_branch_id)
-    JOIN course_progress_state_types USING (course_progress_state_type_id)
-  WHERE on_demand_session_id= %s AND i.course_branch_id = %s AND i.course_item_type_id=1 AND m.course_module_id = %s
-    AND course_progress_state_type_desc = 'started' AND p.course_progress_ts > %s AND
-    p.course_progress_ts < %s
+active_users_module = """with u as (
+SELECT distinct penn_user_id
+FROM course_progress p
+JOIN course_progress_state_types
+  USING (course_progress_state_type_id)
+JOIN course_branch_items i using (course_item_id)
+JOIN course_branch_lessons l using (course_lesson_id, course_branch_id)
+JOIN course_branch_modules m using (course_module_id, course_branch_id)
+WHERE course_branch_id = %s
+  AND m.course_module_id = %s
+  AND i.course_item_type_id=1
+  AND course_progress_state_type_desc = 'started'
+  AND p.course_progress_ts > %s and p.course_progress_ts < %s
 )
-SELECT COUNT(*) FROM active_users;
+select count(distinct penn_user_id) from u;
 """
 
 

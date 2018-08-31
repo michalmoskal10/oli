@@ -53,21 +53,21 @@ cur.execute(sql_statements.active_users_enrolled, (session.session_id, session.c
 session.active_users_enrolled = cur.fetchone()[0]
 
 cur.execute(sql_statements.active_users_time, (session.course_branch_id, start, end))
-session.active_users_time = cur.fetchone()[0]
+session.active_users = cur.fetchone()[0]
 
 db.session.commit()
 
 
 # This assumes that different branches of the same course have the same modules (which might not always be the case probably)
 modules = Module.query.filter(Module.course_id==session.course_id).order_by(Module.order)
-path = os.path.join("data_all3", session.session_id)
+path = os.path.join("data_all", session.session_id)
 os.mkdir(path)
 df_all = pd.DataFrame()
 
 dfs = []
-assignments_tables = []
+dfs_assignments = []
 for module in modules:
-    cur.execute(sql_statements.active_users_module, (session.session_id, session.course_branch_id, module.module_id, start, end))
+    cur.execute(sql_statements.active_users_module, (session.course_branch_id, module.module_id, start, end))
     moduleInfo = ModuleInfo(session_id=session.session_id, module_id=module.module_id, active_users=cur.fetchone()[0])
     db.session.add(moduleInfo)
     db.session.commit()
@@ -84,24 +84,46 @@ for module in modules:
 
     df_assignments = sqlio.read_sql(sql_statements.last_assignment, conn, params=(session.course_branch_id,
                     module.module_id, session.course_branch_id, module.module_id, session.start_date, session.end_date))
-    df_assignments.to_csv(os.path.join(path, "{}_assignments.csv".format(module.module_id)), columns=["name", "last_seen"],
-              index=False)
-    assignments_tables.append(df_assignments)
+    dfs_assignments.append(df_assignments)
 
 
 all = pd.concat(dfs)
+all_assignments = pd.concat(dfs_assignments)
 sum_last_seen = all['last_seen'].sum()
 sum_watched = all['watched'].sum()
+sum_assignments = all_assignments['last_seen'].sum()
+
 for df, module in zip(dfs, modules):
+    m = ModuleInfo.query.filter(ModuleInfo.session_id == session.session_id).filter(ModuleInfo.module_id == module.module_id).first()
     df['last_seen'] /= sum_last_seen
-    df['watched'] /= sum_watched
+    df['watched'] /= m.active_users
     df.to_csv(os.path.join(path, "{}.csv".format(module.module_id)), columns=["video", "last_seen", "watched"],
+              index=False)
+
+for df, module in zip(dfs_assignments, modules):
+    m = ModuleInfo.query.filter(ModuleInfo.session_id == session.session_id).filter(ModuleInfo.module_id == module.module_id).first()
+    df['last_seen'] /= sum_assignments
+    df.to_csv(os.path.join(path, "{}_assignments.csv".format(module.module_id)), columns=["name", "last_seen"],
               index=False)
 
 all['last_seen'] /= sum_last_seen
 all['watched'] /= sum_watched
 all.to_csv(os.path.join(path, "all.csv"), columns=["video", "last_seen", "watched"], index=False)
 
-assignments = pd.concat(assignments_tables)
-assignments['ord'] = assignments.reset_index(drop=True).index
-assignments.to_csv(os.path.join(path, "assignments_table.csv"), columns=["ord", "name", "last_seen"])
+all_assignments['last_seen'] /= sum_assignments
+all_assignments.to_csv(os.path.join(path, "all_assignments.csv"), columns=["name", "last_seen"], index=False)
+
+all_assignments['ord'] = all_assignments.reset_index().index + 1
+all_assignments['last_seen'] *= 100
+all_assignments.columns = ["Course order","Assignment","Last seen (%)"]
+all_assignments.to_csv(os.path.join(path, "assignments_table.csv"), columns=["Course order","Assignment","Last seen (%)"], index=False)
+
+for df, module in zip(dfs_assignments, modules):
+    m = ModuleInfo.query.filter(ModuleInfo.session_id == session.session_id).filter(ModuleInfo.module_id == module.module_id).first()
+    df_len = len(df.index)
+    df['ord'] = all_assignments.head(df_len)
+    df['last_seen'] *= 100
+    df.columns = ["Course order","Assignment","Last seen (%)"]
+    all_assignments = all_assignments.iloc[df_len:]
+    df.to_csv(os.path.join(path, "{}_assignments_table.csv".format(module.module_id)), columns=["Course order","Assignment","Last seen (%)"],
+              index=False)
